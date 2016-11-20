@@ -197,4 +197,12 @@ class ExpressionBuilder
         return new Comparison\EndsWith($field, new Value($value));
     }
 
+    /**
+     * @param callable $closure
+     *
+     * @return Comparison
+     */
+    public function matchingClosure(\Closure $closure) {
+        return new Comparison\MatchClosure($closure);
+    }
 }

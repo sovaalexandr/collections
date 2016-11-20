@@ -21,6 +21,7 @@ namespace Doctrine\Tests\Common\Collections;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\Comparison\MatchClosure;
 use Doctrine\Tests\DerivedArrayCollection;
 
 /**
@@ -332,5 +333,26 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf('Doctrine\Tests\DerivedArrayCollection', $collection->filter($closure));
         self::assertContainsOnlyInstancesOf('Doctrine\Tests\DerivedArrayCollection', $collection->partition($closure));
         self::assertInstanceOf('Doctrine\Tests\DerivedArrayCollection', $collection->matching(new Criteria));
+    }
+
+    public function testMatchWithClosureCriteria()
+    {
+        $dateTime = new \DateTime();
+        $collection = new ArrayCollection(
+            array(
+                new \DateTime('2000-01-01'),
+                new \DateTime(),
+                new \DateTimeImmutable(),
+            )
+        );
+
+        $criteria = Criteria::create()
+            ->andWhere(
+                Criteria::expr()->matchingClosure(function(\DateTimeInterface $date) use ($dateTime) {
+                    return $date->format('Y-m-d') === $dateTime->format('Y-m-d');
+                })
+            )
+        ;
+        $this->assertCount(2, $collection->matching($criteria));
     }
 }
