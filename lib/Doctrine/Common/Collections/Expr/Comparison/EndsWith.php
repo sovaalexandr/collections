@@ -1,8 +1,20 @@
 <?php
-/**
- * This file is part of the collections project.
+/*
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * (c) Yannick Voyer <star.yvoyer@gmail.com> (http://github.com/yvoyer)
+ * This software consists of voluntary contributions made by many individuals
+ * and is licensed under the MIT license. For more information, see
+ * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\Common\Collections\Expr\Comparison;
@@ -11,6 +23,9 @@ use Doctrine\Common\Collections\Expr\ClosureExpressionVisitor;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\Value;
 
+/**
+ * @author Yannick Voyer (http://github.com/yvoyer)
+ */
 final class EndsWith extends Comparison
 {
     /**
@@ -27,11 +42,11 @@ final class EndsWith extends Comparison
      */
     public function getFilterCallback()
     {
-        $field = $this->getField();
-        $value = $this->getValue()->getValue();
-
-        return function ($object) use ($field, $value) {
-            return $value === substr(ClosureExpressionVisitor::getObjectFieldValue($object, $field), -strlen($value));
+        return function ($object) {
+            return $this->getValue()->getValue() === substr(
+                ClosureExpressionVisitor::getObjectFieldValue($object, $this->getField()),
+                -strlen($this->getValue()->getValue())
+            );
         };
     }
 }
