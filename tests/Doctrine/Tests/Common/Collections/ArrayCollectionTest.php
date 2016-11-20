@@ -342,7 +342,7 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
             array(
                 new \DateTime('2000-01-01'),
                 new \DateTime(),
-                new \DateTimeImmutable(),
+                new \DateTime(),
             )
         );
 
