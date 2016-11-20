@@ -42,10 +42,13 @@ final class Contains extends Comparison
      */
     public function getFilterCallback()
     {
-        return function ($object) {
+        $value = $this->getValue()->getValue();
+        $field = $this->getField();
+
+        return function ($object) use ($value, $field) {
             return false !== strpos(
-                ClosureExpressionVisitor::getObjectFieldValue($object, $this->getField()),
-                $this->getValue()->getValue()
+                ClosureExpressionVisitor::getObjectFieldValue($object, $field),
+                $value
             );
         };
     }

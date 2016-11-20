@@ -42,10 +42,11 @@ final class MemberOf extends Comparison
      */
     public function getFilterCallback()
     {
-        return function ($object) {
-            $value = $this->getValue()->getValue();
+        $value = $this->getValue()->getValue();
+        $field = $this->getField();
 
-            $fieldValues = ClosureExpressionVisitor::getObjectFieldValue($object, $this->getField());
+        return function ($object) use ($value, $field) {
+            $fieldValues = ClosureExpressionVisitor::getObjectFieldValue($object, $field);
             if (!is_array($fieldValues)) {
                 $fieldValues = iterator_to_array($fieldValues);
             }

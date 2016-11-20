@@ -42,9 +42,11 @@ final class StartsWith extends Comparison
      */
     public function getFilterCallback()
     {
-        return function ($object) {
-            $value = $this->getValue()->getValue();
-            return 0 === strpos(ClosureExpressionVisitor::getObjectFieldValue($object, $this->getField()), $value);
+        $value = $this->getValue()->getValue();
+        $field = $this->getField();
+
+        return function ($object) use ($value, $field) {
+            return 0 === strpos(ClosureExpressionVisitor::getObjectFieldValue($object, $field), $value);
         };
     }
 }

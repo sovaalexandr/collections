@@ -42,9 +42,11 @@ final class NotIn extends Comparison
      */
     public function getFilterCallback()
     {
-        return function ($object) {
-            $value = $this->getValue()->getValue();
-            return ! in_array(ClosureExpressionVisitor::getObjectFieldValue($object, $this->getField()), $value);
+        $value = $this->getValue()->getValue();
+        $field = $this->getField();
+
+        return function ($object) use ($value, $field) {
+            return ! in_array(ClosureExpressionVisitor::getObjectFieldValue($object, $field), $value);
         };
     }
 }

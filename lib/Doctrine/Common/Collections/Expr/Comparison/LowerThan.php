@@ -42,9 +42,11 @@ final class LowerThan extends Comparison
      */
     public function getFilterCallback()
     {
-        return function ($object) {
-            $value = $this->getValue()->getValue();
-            return ClosureExpressionVisitor::getObjectFieldValue($object, $this->getField()) < $value;
+        $value = $this->getValue()->getValue();
+        $field = $this->getField();
+
+        return function ($object) use ($value, $field) {
+            return ClosureExpressionVisitor::getObjectFieldValue($object, $field) < $value;
         };
     }
 }

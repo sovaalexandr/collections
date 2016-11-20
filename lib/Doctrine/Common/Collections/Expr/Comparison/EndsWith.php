@@ -42,9 +42,12 @@ final class EndsWith extends Comparison
      */
     public function getFilterCallback()
     {
-        return function ($object) {
-            return $this->getValue()->getValue() === substr(
-                ClosureExpressionVisitor::getObjectFieldValue($object, $this->getField()),
+        $value = $this->getValue()->getValue();
+        $field = $this->getField();
+
+        return function ($object) use ($value, $field) {
+            return $value === substr(
+                ClosureExpressionVisitor::getObjectFieldValue($object, $field),
                 -strlen($this->getValue()->getValue())
             );
         };
