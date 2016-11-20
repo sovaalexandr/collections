@@ -192,6 +192,11 @@ class ClosureExpressionVisitor extends ExpressionVisitor
                     return $value === substr(ClosureExpressionVisitor::getObjectFieldValue($object, $field), -strlen($value));
                 };
 
+            case Comparison::MATCH:
+                if (! is_callable($value)) {
+                    throw new \InvalidArgumentException('A callable must be given to the match Comparison.');
+                }
+                return $value;
 
             default:
                 throw new \RuntimeException("Unknown comparison operator: " . $comparison->getOperator());

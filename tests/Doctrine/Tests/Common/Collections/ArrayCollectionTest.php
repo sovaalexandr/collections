@@ -333,4 +333,23 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
         self::assertContainsOnlyInstancesOf('Doctrine\Tests\DerivedArrayCollection', $collection->partition($closure));
         self::assertInstanceOf('Doctrine\Tests\DerivedArrayCollection', $collection->matching(new Criteria));
     }
+
+    public function testMatchingWithCustomExpression()
+    {
+        $collection = new ArrayCollection();
+        $stdClass = new \stdClass();
+        $stdClass->id = 1;
+        $stdClass->vo = new \DateTime();
+        $collection->add($stdClass);
+
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->match(
+                    function($context) {
+                        return $context->vo->format('Y-m-d') == date('Y-m-d');
+                    }
+                )
+            );
+
+        $this->assertCount(1, $collection->matching($criteria));
+    }
 }

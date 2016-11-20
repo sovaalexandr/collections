@@ -21,6 +21,7 @@ namespace Doctrine\Common\Collections;
 
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
+use Doctrine\Common\Collections\Expr\Expression;
 use Doctrine\Common\Collections\Expr\Value;
 
 /**
@@ -195,6 +196,17 @@ class ExpressionBuilder
     public function endsWith($field, $value)
     {
         return new Comparison($field, Comparison::ENDS_WITH, new Value($value));
-    }    
+    }
 
+    /**
+     * The context will be given as first argument to the closure, for custom matching.
+     *
+     * @param \Closure $closure
+     *
+     * @return Comparison
+     */
+    public function match(\Closure $closure)
+    {
+        return new Comparison(null, Comparison::MATCH, $closure);
+    }
 }

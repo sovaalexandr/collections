@@ -20,6 +20,7 @@
 namespace Doctrine\Tests\Common\Collections;
 
 use Doctrine\Common\Collections\Expr\ClosureExpressionVisitor;
+use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\ExpressionBuilder;
 
 /**
@@ -268,6 +269,27 @@ class ClosureExpressionVisitorTest extends \PHPUnit_Framework_TestCase
         $closure = $this->visitor->walkComparison($this->builder->eq("foo", 42));
 
         $this->assertTrue($closure(array('foo' => 42)));
+    }
+
+    public function testCustomMatcher()
+    {
+        $closure = $this->visitor->walkComparison(
+            $this->builder->match(
+                function (TestObject $context) {
+                    return $context->getFoo()->format('Y-m-d') == date('Y-m-d');
+                }
+            ));
+        $this->assertTrue($closure(new TestObject(new \DateTime(), (object) array('id' => 3))));
+    }
+
+    /**
+     * @expectedException        \InvalidArgumentException
+     * @expectedExceptionMessage A callable must be given to the match Comparison.
+     */
+    public function testThrowExceptionWhenMatchComparisonIsNotCallable()
+    {
+        $closure = $this->visitor->walkComparison(new Comparison('', Comparison::MATCH, ''));
+        $this->assertTrue($closure('value'));
     }
 }
 
