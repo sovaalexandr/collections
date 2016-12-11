@@ -346,13 +346,17 @@ class ArrayCollectionTest extends \PHPUnit_Framework_TestCase
             )
         );
 
+        /**
+         * @param \DateTimeInterface $date
+         * @return bool
+         */
+        $predicate = function ($date) use ($dateTime) {
+            return $date->format('Y-m-d') === $dateTime->format('Y-m-d');
+        };
         $criteria = Criteria::create()
             ->andWhere(
-                Criteria::expr()->matchingClosure(function(\DateTimeInterface $date) use ($dateTime) {
-                    return $date->format('Y-m-d') === $dateTime->format('Y-m-d');
-                })
-            )
-        ;
+                Criteria::expr()->matchingClosure($predicate)
+            );
         $this->assertCount(2, $collection->matching($criteria));
     }
 }
